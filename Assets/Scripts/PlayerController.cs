@@ -45,13 +45,13 @@ public class PlayerController : BasePlayerController
     protected override void OnEnable()
     {
         base.OnEnable();
-        Health.OnTakingDamage += PlayOnTakingDamageAnimation;
+        //Health.OnTakingDamage += PlayOnTakingDamageAnimation;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
-        Health.OnTakingDamage -= PlayOnTakingDamageAnimation;
+       // Health.OnTakingDamage -= PlayOnTakingDamageAnimation;
     }
 
   /*  protected override void Die()
