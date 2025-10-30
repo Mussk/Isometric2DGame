@@ -5,6 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="34198305-5fa7-4440-99af-8d2794ba7753" name="Changes" comment="">
+<<<<<<< Updated upstream
+=======
+      <change afterPath="$PROJECT_DIR$/.idea/.idea.Isometric2DGame/.idea/projectSettingsUpdater.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.idea.Isometric2DGame/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Health.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Health.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/HealthBar.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/HealthBar.cs.meta" afterDir="false" />
+>>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/Assets/ImportedAssets/Pixel Crawler - Cemetery/Entities/Characters/A_Hunter/Attack_01_Base/Slice_Down-Sheet.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ImportedAssets/Pixel Crawler - Cemetery/Entities/Characters/A_Hunter/Attack_01_Base/Slice_Down-Sheet.png.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/ImportedAssets/Pixel Crawler - Cemetery/Entities/Characters/A_Hunter/Attack_01_Base/Slice_Side-Sheet.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ImportedAssets/Pixel Crawler - Cemetery/Entities/Characters/A_Hunter/Attack_01_Base/Slice_Side-Sheet.png.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/ImportedAssets/Pixel Crawler - Cemetery/Entities/Characters/A_Hunter/Attack_01_Base/Slice_Up-Sheet.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ImportedAssets/Pixel Crawler - Cemetery/Entities/Characters/A_Hunter/Attack_01_Base/Slice_Up-Sheet.png.meta" afterDir="false" />
@@ -52,6 +61,13 @@
       <change beforePath="$PROJECT_DIR$/Assets/ImportedAssets/Pixel Crawler - Cemetery/Environment/Structures/Walls.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ImportedAssets/Pixel Crawler - Cemetery/Environment/Structures/Walls.png.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/ImportedAssets/Pixel Crawler - Cemetery/Weapons/Cursed Weapons.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ImportedAssets/Pixel Crawler - Cemetery/Weapons/Cursed Weapons.png.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
+<<<<<<< Updated upstream
+=======
+      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/NavMeshAreas.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/NavMeshAreas.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
+>>>>>>> Stashed changes
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,6 +94,7 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
+<<<<<<< Updated upstream
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
@@ -93,6 +110,23 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+=======
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "feature-enemy",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+>>>>>>> Stashed changes
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
       <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.1.4f1\Editor\Unity.exe" />
@@ -153,7 +187,11 @@
       <option name="presentableId" value="Default" />
       <updated>1761669122656</updated>
       <workItem from="1761669125674" duration="12542000" />
+<<<<<<< Updated upstream
       <workItem from="1761839387892" duration="6578000" />
+=======
+      <workItem from="1761839387892" duration="4752000" />
+>>>>>>> Stashed changes
     </task>
     <servers />
   </component>
