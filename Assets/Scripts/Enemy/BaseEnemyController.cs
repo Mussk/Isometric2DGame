@@ -36,6 +36,8 @@ namespace  Enemy
         [Header("Hit Config")] [SerializeField]
         protected float hitAnimExitTime = 0.33f;
         
+        [Header("Death Config")]
+        [SerializeField] protected float deathAnimExitTime = 3f;
 
         [Header("Patrol Config")] [SerializeField]
         protected float patrolSpeed;
@@ -47,7 +49,9 @@ namespace  Enemy
         [Space] 
         [Header("Debug Info")] 
         [SerializeField] protected bool isInMeeleRange;
-        [SerializeField] public bool IsGotHit { get; set; }
+        public bool IsGotHit { get; set; }
+        public bool IsDead { get; set; }
+
 
         [SerializeField] protected bool isInChasingRange;
         [SerializeField] protected float lastAttackTime;
@@ -78,6 +82,7 @@ namespace  Enemy
             EnemyFsm.AddState(EnemyState.Attack, new AttackState(true, this, OnAttack, attackAnimExitTime));
             EnemyFsm.AddState(EnemyState.Patrol, new PatrolState(true, this, patrolSpeed, patrolMaxDistance));
             EnemyFsm.AddState(EnemyState.Hit, new HitState(true, this, hitAnimExitTime));
+            EnemyFsm.AddState(EnemyState.Death, new DeathState(true, this, deathAnimExitTime));
 
             EnemyFsm.SetStartState(EnemyState.Idle);
 
@@ -127,7 +132,16 @@ namespace  Enemy
             EnemyFsm.AddTransition(new Transition<EnemyState>(EnemyState.Hit, EnemyState.Idle, (_) => IsGotHit));
             EnemyFsm.AddTransition(new Transition<EnemyState>(EnemyState.Hit, EnemyState.Patrol, (_) => IsGotHit));
             EnemyFsm.AddTransition(new Transition<EnemyState>(EnemyState.Hit, EnemyState.Attack, (_) => IsGotHit));
-
+            
+            //Death transitions
+            //All stages => Death
+            //From parameter can be anything
+            EnemyFsm.AddTransitionFromAny(new Transition<EnemyState>(EnemyState.Attack, EnemyState.Death, (_) => IsDead,
+                forceInstantly: true));
+            
+            
+           
+            
             EnemyFsm.Init();
         }
 
@@ -186,7 +200,11 @@ namespace  Enemy
 
     private void AdjustLookDirection(Vector3 destination)
     {
-        spriteRenderer.flipX = !(destination.x > transform.position.x);
+        if (!IsDead)
+        {
+            spriteRenderer.flipX = !(destination.x > transform.position.x);
+        }
+        
     }
 }
 }

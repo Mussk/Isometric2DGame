@@ -13,7 +13,7 @@ namespace Enemy
 
         private Health HealhSystem { get; set; }
 
-        public static event Action OnEnemyDeath;
+       // public static event Action OnEnemyDeath;
         
         protected override void Awake()
         {
@@ -25,37 +25,23 @@ namespace Enemy
         
         private void OnEnable()
         {
-            HealhSystem.OnDeath += TriggerDeath;
+            HealhSystem.OnDeath += TriggerDeathState;
             HealhSystem.OnTakingDamage += TriggerHitState;
         
         }
 
         private void OnDisable()
         {
-            HealhSystem.OnDeath -= TriggerDeath;
+            HealhSystem.OnDeath -= TriggerDeathState;
             HealhSystem.OnTakingDamage -= TriggerHitState;
         }
         
        
-        private async void TriggerDeath()
-        {/*
-            try
-            {
-                idleDuration = 10;
-                StateMachine.ChangeState(IdleState);
-                HealhSystem.IsInvurable = true;
-                OnEnemyDeath?.Invoke();
-                canMove = false;
-                PlayDeathAnimation();
+        private void TriggerDeathState()
+        {
+                IsDead = true;
                 DisableColliders();
-                await Task.Delay(deathDelay);
-                Destroy(gameObject);
-            }
-            catch (Exception e)
-            {
-                Debug.Log(e.Message);
-            }*/
-            throw new NotImplementedException();
+                //add to poll
         }
 
         private void TriggerHitState()
@@ -70,17 +56,7 @@ namespace Enemy
                 HealhSystem.TakeDamage(Player.GetComponent<PlayerController>().DamageAmount);
             }
         }
-
-        private void PlayDeathAnimation()
-        {
-           /* animator.SetBool(Move, false);
-            animator.SetBool(IsDead, true);
-            animator.SetBool(IsAttacking, false);
-            animator.SetBool(IsTakingHit, false);
-            _cachedPos = transform.position;*/
-
-        }
-
+        
         private void DisableColliders()
         {
             Collider2D[] colliders = gameObject.GetComponents<Collider2D>();

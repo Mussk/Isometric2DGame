@@ -100105,7 +100105,7 @@ MonoBehaviour:
   invulnerabilityDuration: 2
   healthBar: {fileID: 8992413736484965877}
   canMove: 0
-  damageAmount: 7
+  damageAmount: 35
   animator: {fileID: 2103527152494034887}
   spriteRenderer: {fileID: 4054121958145356692}
 --- !u!114 &8275745070306066601
