@@ -1,77 +1,70 @@
-
-using System.Collections;
-using System.Collections.Generic;
-using Enemy;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityHFSM;
 
-public class PatrolState : EnemyStateBase
+namespace Enemy.EnemyBehaviour.States
 {
-
-    private float CachedAgentSpeed;
-    private float PatrolSpeed;
-    private float PatrolMaxDistance;
-
-    private Vector3 PatrolDestination;
-
-    public PatrolState(bool needsExitTime, BaseEnemyController Enemy,
-       float PatrolSpeed, float PatrolMaxDistance)
-        : base(needsExitTime, Enemy)
-    {
-        this.PatrolSpeed = PatrolSpeed;
-        this.PatrolMaxDistance = PatrolMaxDistance;
-        PatrolDestination = Vector3.zero;
-    }
-
-    public override void OnEnter()
+    public class PatrolState : EnemyStateBase
     {
 
-        CachedAgentSpeed = Agent.speed;
-        Agent.speed = PatrolSpeed;
-        Agent.enabled = true;
-        Agent.isStopped = false;
-        PatrolDestination = GetRandomNavMeshPosition(Enemy.gameObject.transform.position, PatrolMaxDistance);
-        base.OnEnter();
-        Animator.Play("Walk");
+        private float _cachedAgentSpeed;
+        private float _patrolSpeed;
+        private float _patrolMaxDistance;
 
-    }
+        private Vector3 _patrolDestination;
 
-    public override void OnLogic() 
-    {   
+        public PatrolState(bool needsExitTime, BaseEnemyController enemy,
+            float patrolSpeed, float patrolMaxDistance)
+            : base(needsExitTime, enemy)
+        {
+            this._patrolSpeed = patrolSpeed;
+            this._patrolMaxDistance = patrolMaxDistance;
+            _patrolDestination = Vector3.zero;
+        }
+
+        public override void OnEnter()
+        {
+
+            _cachedAgentSpeed = Agent.speed;
+            Agent.speed = _patrolSpeed;
+            Agent.enabled = true;
+            Agent.isStopped = false;
+            _patrolDestination = GetRandomNavMeshPosition(Enemy.gameObject.transform.position, _patrolMaxDistance);
+            base.OnEnter();
+            Animator.Play("Movement");
+
+        }
+
+        public override void OnLogic() 
+        {   
        
         
-        if (!RequestedExit) 
-        {
+            if (!RequestedExit) 
+            {
             
             
-            Agent.SetDestination(PatrolDestination);
+                Agent.SetDestination(_patrolDestination);
         
-        }
-        else if (Agent.remainingDistance <= Agent.stoppingDistance)
-        {
+            }
+            else if (Agent.remainingDistance <= Agent.stoppingDistance)
+            {
             
-            fsm.StateCanExit();
+                fsm.StateCanExit();
+
+            }
+            base.OnLogic();
 
         }
-        base.OnLogic();
 
-    }
-
-    public override void OnExit()
-    {
-        base.OnExit();
-        Agent.speed = CachedAgentSpeed;
-    }
-
-    Vector3 GetRandomNavMeshPosition(Vector3 center, float maxDistance)
-    {
-        Vector3 randomPoint = center + UnityEngine.Random.insideUnitSphere * maxDistance;
-        NavMeshHit hit;
-        if (NavMesh.SamplePosition(randomPoint, out hit, maxDistance, NavMesh.AllAreas))
+        public override void OnExit()
         {
-            return hit.position;
+            base.OnExit();
+            Agent.speed = _cachedAgentSpeed;
         }
-        return Vector3.zero; // Return zero vector if no valid position found
+
+        private Vector3 GetRandomNavMeshPosition(Vector3 center, float maxDistance)
+        {
+            Vector3 randomPoint = center + Random.insideUnitSphere * maxDistance;
+            return NavMesh.SamplePosition(randomPoint, out var hit, maxDistance, NavMesh.AllAreas) ? hit.position : Vector3.zero;
+        }
     }
 }

@@ -6,13 +6,7 @@ namespace Enemy
 {
     public class EnemyController : BaseEnemyController
     {
-        private static readonly int Move = Animator.StringToHash("CanMove");
-        private static readonly int AnimMoveX = Animator.StringToHash("AnimMoveX");
-        private static readonly int AnimMoveY = Animator.StringToHash("AnimMoveY");
-        private static readonly int IsAttacking = Animator.StringToHash("IsAttacking");
-        private static readonly int IsTakingHit = Animator.StringToHash("IsTakingHit");
-        private static readonly int IsDead = Animator.StringToHash("IsDead");
-
+       
         [Header("Health")]
         [SerializeField]
         private int currentHealth;
@@ -20,53 +14,26 @@ namespace Enemy
         private Health HealhSystem { get; set; }
 
         public static event Action OnEnemyDeath;
-
-      /*  [Header("Animation")]
-        [SerializeField]
-        private Animator animator;
-        [SerializeField]
-        private SpriteRenderer spriteRenderer;
-        [SerializeField]
-        private string attackColliderTag;
-        [SerializeField]
-        private int deathDelay;*/
-    
-
-        private Vector3 _cachedPos;
-
-        protected void Awake()
+        
+        protected override void Awake()
         {
-            
+            base.Awake();
             HealhSystem = new Health(currentHealth, null);
 
             
         }
-
-        protected void Start()
-        {
-
-          
-        }
-
-        protected void Update()
-        {
-           
-
-          //  if(!canMove)
-             //   transform.position = _cachedPos;
-        }
-
+        
         private void OnEnable()
         {
             HealhSystem.OnDeath += TriggerDeath;
-            HealhSystem.OnTakingDamage += PlayTakingDamageAnimation;
+            //HealhSystem.OnTakingDamage += PlayTakingDamageAnimation;
         
         }
 
         private void OnDisable()
         {
             HealhSystem.OnDeath -= TriggerDeath;
-            HealhSystem.OnTakingDamage -= PlayTakingDamageAnimation;
+           // HealhSystem.OnTakingDamage -= PlayTakingDamageAnimation;
         }
         
        
@@ -88,43 +55,11 @@ namespace Enemy
             {
                 Debug.Log(e.Message);
             }*/
+            throw new NotImplementedException();
         }
 
-        public void AnimateWalk(float animMoveX, float animMoveY)
-        {
-            
-
-           // if(canMove)
-           // {
-          //      spriteRenderer.flipX = animMoveX < 0;
-          //  }
-        }
-
-        public async void AnimateAttack()
-        {
-          /*  try
-            {
-                if (animator is null || !canMove) return;
-                animator.SetBool(IsAttacking, true);
-                await Task.Delay((int)attackCooldown * 1000);
-                if(canMove)
-                    animator.SetBool(IsAttacking, false);
-            }
-            catch (Exception e)
-            {
-                Debug.Log(e.Message);
-            }*/
-        }
-
-        public void ResetAttackAnimation()
-        {
-           
-        }
-
-        private void PlayTakingDamageAnimation()
-        {
-           
-        }
+        
+        
 
         private void PlayDeathAnimation()
         {

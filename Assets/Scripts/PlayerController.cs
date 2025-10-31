@@ -45,13 +45,13 @@ public class PlayerController : BasePlayerController
     protected override void OnEnable()
     {
         base.OnEnable();
-        //Health.OnTakingDamage += PlayOnTakingDamageAnimation;
+        Health.OnTakingDamage += PlayOnTakingDamageAnimation;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
-       // Health.OnTakingDamage -= PlayOnTakingDamageAnimation;
+        Health.OnTakingDamage -= PlayOnTakingDamageAnimation;
     }
 
   /*  protected override void Die()
@@ -103,6 +103,7 @@ public class PlayerController : BasePlayerController
     }
 
 
+    
     protected void PlayOnTakingDamageAnimation() 
     {
         //AudioManager.PlaySound(AudioManager.AudioLibrary.TribeSceneSounds.PlayerHit);
@@ -110,5 +111,5 @@ public class PlayerController : BasePlayerController
     
     }
 
-    //Animation end trigger in PlayerAttackAnimationTrigger
+    
 }

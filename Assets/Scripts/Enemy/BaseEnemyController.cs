@@ -1,154 +1,162 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 using UnityHFSM;
 using UnityEngine.AI;
-using System;
-using Unity.AI.Navigation;
+
+using Enemy.EnemyBehaviour;
+using Enemy.EnemyBehaviour.States;
+using Enemy.Sensor;
+
 
 namespace  Enemy
 {
-[RequireComponent(typeof(Animator), typeof(NavMeshAgent))]
-public class BaseEnemyController : MonoBehaviour
+[RequireComponent(typeof(NavMeshAgent))]
+public abstract class BaseEnemyController : MonoBehaviour
 {
   
-    private GameObject Player;
-    private Health PlayerHealthController;
+    protected GameObject Player;
+    protected Health PlayerHealthController;
+    protected string PlayerTag;
+    
+    [Header("Enemy Model Sprite Renderer")]
+    [SerializeField]
+    protected SpriteRenderer spriteRenderer;
 
-
+    
     [Header("Sensors")]
     [SerializeField]
-    private PlayerSensor FollowPlayerSensor;
+    protected PlayerSensor followPlayerSensor;
     [SerializeField]
-    private PlayerSensor MeleePlayerSensor;
+    protected PlayerSensor meleePlayerSensor;
 
+    
     [Header("Attack Config")]
     [SerializeField]
     [Range(0.1f, 5f)]
-    private float AttackCooldown = 2;
+    protected float attackCooldown = 2;
     [SerializeField]
-    private int AttackDamage = 1;
+    protected int attackDamage = 1;
+    [SerializeField] 
+    protected float attackAnimExitTime;
 
+    
     [Header("Patrol Config")]
     [SerializeField]
-    private float PatrolSpeed;
+    protected float patrolSpeed;
     [SerializeField]
-    private float PatrolMaxDistance;
+    protected float patrolMaxDistance;
     [SerializeField]
-    private float maxIdleTime;
+    protected float maxIdleTime;
 
+    
     [Space]
     [Header("Debug Info")]
     [SerializeField]
-    private bool IsInMeeleRange;
+    protected bool isInMeeleRange;
     [SerializeField]
-    private bool IsInChasingRange;
+    protected bool isInChasingRange;
     [SerializeField]
-    private float LastAttackTime;
+    protected float lastAttackTime;
     
 
-    private StateMachine<EnemyState, StateEvent> EnemyFSM;
-    private Animator Animator;
-    private NavMeshAgent Agent;
+    protected StateMachine<EnemyState, StateEvent> EnemyFsm;
+    protected Animator Animator;
+    protected NavMeshAgent Agent;
 
     public delegate void EnemyAttack();
     public static event EnemyAttack OnEnemyAttack;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         Agent = GetComponent<NavMeshAgent>();
-        Animator = GetComponent<Animator>();
-        EnemyFSM = new StateMachine<EnemyState, StateEvent>();
-        Player = GameObject.FindWithTag("Player").GetComponentInChildren<CharacterController>().gameObject;
-        PlayerHealthController = Player.GetComponent<Health>();
+        Animator = GetComponentInChildren<Animator>();
+        EnemyFsm = new StateMachine<EnemyState, StateEvent>();
+        Player = GameObject.FindWithTag(PlayerTag).gameObject;
+       
+        // Configure the agent for 2D
+        Agent.updateUpAxis = false;
+        Agent.updateRotation = false;
 
         //Add States
-        EnemyFSM.AddState(EnemyState.Idle, new IdleState(false, this, maxIdleTime));
-        EnemyFSM.AddState(EnemyState.Chase, new ChaseState(true, this, Player.transform));
-        EnemyFSM.AddState(EnemyState.Attack, new AttackState(true, this, OnAttack));
-        EnemyFSM.AddState(EnemyState.Patrol, new PatrolState(true, this, PatrolSpeed, PatrolMaxDistance));
+        EnemyFsm.AddState(EnemyState.Idle, new IdleState(false, this, maxIdleTime));
+        EnemyFsm.AddState(EnemyState.Chase, new ChaseState(true, this, Player.transform));
+        EnemyFsm.AddState(EnemyState.Attack, new AttackState(true, this, OnAttack, attackAnimExitTime));
+        EnemyFsm.AddState(EnemyState.Patrol, new PatrolState(true, this, patrolSpeed, patrolMaxDistance));
 
-        EnemyFSM.SetStartState(EnemyState.Idle);
+        EnemyFsm.SetStartState(EnemyState.Idle);
 
         //Add Transitions
-        EnemyFSM.AddTriggerTransition(StateEvent.DetectPlayer, new Transition<EnemyState>(EnemyState.Idle, EnemyState.Chase));
-        EnemyFSM.AddTriggerTransition(StateEvent.LostPlayer, new Transition<EnemyState>(EnemyState.Chase, EnemyState.Idle));
-        EnemyFSM.AddTransition(new Transition<EnemyState>(EnemyState.Idle, EnemyState.Chase,
-            (transition) => IsInChasingRange
+        EnemyFsm.AddTriggerTransition(StateEvent.DetectPlayer, new Transition<EnemyState>(EnemyState.Idle, EnemyState.Chase));
+        EnemyFsm.AddTriggerTransition(StateEvent.LostPlayer, new Transition<EnemyState>(EnemyState.Chase, EnemyState.Patrol));
+        EnemyFsm.AddTransition(new Transition<EnemyState>(EnemyState.Idle, EnemyState.Chase,
+            (_) => isInChasingRange
             && Vector3.Distance(Player.transform.position, transform.position) > Agent.stoppingDistance)
             );
-        EnemyFSM.AddTransition(new Transition<EnemyState>(EnemyState.Chase, EnemyState.Idle,
-            (transition) => !IsInChasingRange
+        EnemyFsm.AddTransition(new Transition<EnemyState>(EnemyState.Chase, EnemyState.Idle,
+            (_) => !isInChasingRange
             || Vector3.Distance(Player.transform.position, transform.position) <= Agent.stoppingDistance)
             );
-        EnemyFSM.AddTransition(new Transition<EnemyState>(EnemyState.Idle, EnemyState.Patrol));
-        EnemyFSM.AddTransition(new Transition<EnemyState>(EnemyState.Patrol, EnemyState.Idle,
-            (transition) => Agent.remainingDistance <= 0));
-        EnemyFSM.AddTransition(new Transition<EnemyState>(EnemyState.Patrol, EnemyState.Chase,
-            (transition) => IsInChasingRange
+        EnemyFsm.AddTransition(new Transition<EnemyState>(EnemyState.Idle, EnemyState.Patrol));
+        EnemyFsm.AddTransition(new Transition<EnemyState>(EnemyState.Patrol, EnemyState.Idle,
+            (_) => Agent.remainingDistance <= 0));
+        EnemyFsm.AddTransition(new Transition<EnemyState>(EnemyState.Patrol, EnemyState.Chase,
+            (_) => isInChasingRange
             && Vector3.Distance(Player.transform.position, transform.position) > Agent.stoppingDistance));
 
 
         //Attack Transitions
-        EnemyFSM.AddTransition(new Transition<EnemyState>(EnemyState.Chase, EnemyState.Attack, ShouldMelee, forceInstantly: true));
-        EnemyFSM.AddTransition(new Transition<EnemyState>(EnemyState.Idle, EnemyState.Attack, ShouldMelee, forceInstantly: true));
-        EnemyFSM.AddTransition(new Transition<EnemyState>(EnemyState.Attack, EnemyState.Chase, IsNotWithinIdleRange));
-        EnemyFSM.AddTransition(new Transition<EnemyState>(EnemyState.Attack, EnemyState.Idle, IsWithinIdleRange));
+        EnemyFsm.AddTransition(new Transition<EnemyState>(EnemyState.Chase, EnemyState.Attack, ShouldMelee, forceInstantly: true));
+        EnemyFsm.AddTransition(new Transition<EnemyState>(EnemyState.Idle, EnemyState.Attack, ShouldMelee, forceInstantly: true));
+        EnemyFsm.AddTransition(new Transition<EnemyState>(EnemyState.Attack, EnemyState.Chase, IsNotWithinIdleRange));
+        EnemyFsm.AddTransition(new Transition<EnemyState>(EnemyState.Attack, EnemyState.Idle, IsWithinIdleRange));
 
         
-        EnemyFSM.Init();
+        EnemyFsm.Init();
     }
 
    
-    private void Start()
+    protected virtual void Start()
     {
-        FollowPlayerSensor.OnPlayerEnter += FollowPlayerSensor_OnPlayerEnter;
-        FollowPlayerSensor.OnPlayerExit += FollowPlayerSensor_OnPlayerExit;
-        MeleePlayerSensor.OnPlayerEnter += MeleePlayerSensor_OnPlayerEnter;
-        MeleePlayerSensor.OnPlayerExit += MeleePlayerSensor_OnPlayerExit;
+        followPlayerSensor.OnPlayerEnter += FollowPlayerSensor_OnPlayerEnter;
+        followPlayerSensor.OnPlayerExit += FollowPlayerSensor_OnPlayerExit;
+        meleePlayerSensor.OnPlayerEnter += MeleePlayerSensor_OnPlayerEnter;
+        meleePlayerSensor.OnPlayerExit += MeleePlayerSensor_OnPlayerExit;
         
+        PlayerHealthController = Player.GetComponent<PlayerController>().Health;
         
     }
 
-    private void FollowPlayerSensor_OnPlayerEnter(Transform Player) 
+    protected void FollowPlayerSensor_OnPlayerEnter(Transform player) 
     {
         
-        EnemyFSM.Trigger(StateEvent.DetectPlayer);
-        IsInChasingRange = true; 
+        EnemyFsm.Trigger(StateEvent.DetectPlayer);
+        isInChasingRange = true; 
     }
-    private void FollowPlayerSensor_OnPlayerExit(Vector3 LastKnownPosition)
+    protected void FollowPlayerSensor_OnPlayerExit(Vector2 lastKnownPosition)
     {
-        EnemyFSM.Trigger(StateEvent.LostPlayer);
-        IsInChasingRange = false;
+        EnemyFsm.Trigger(StateEvent.LostPlayer);
+        isInChasingRange = false;
     }
 
-    private void MeleePlayerSensor_OnPlayerEnter(Transform Player) => IsInMeeleRange = true;
-    private void MeleePlayerSensor_OnPlayerExit(Vector3 LastKnownPosition) => IsInMeeleRange = false;
+    protected void MeleePlayerSensor_OnPlayerEnter(Transform player) => isInMeeleRange = true;
+    protected void MeleePlayerSensor_OnPlayerExit(Vector2 lastKnownPosition) => isInMeeleRange = false;
 
-    private bool IsWithinIdleRange(Transition<EnemyState> Transition) =>
+    protected bool IsWithinIdleRange(Transition<EnemyState> transition) =>
         Agent.remainingDistance <= Agent.stoppingDistance;
 
-    private bool IsNotWithinIdleRange(Transition<EnemyState> Transition) =>
-       !IsWithinIdleRange(Transition);
+    protected bool IsNotWithinIdleRange(Transition<EnemyState> transition) =>
+       !IsWithinIdleRange(transition);
 
-    private bool ShouldMelee(Transition<EnemyState> Transition) =>
-        LastAttackTime + AttackCooldown <= Time.time && IsInMeeleRange;
+    protected bool ShouldMelee(Transition<EnemyState> transition) =>
+        lastAttackTime + attackCooldown <= Time.time && isInMeeleRange;
 
-    private void OnAttack(State<EnemyState, StateEvent> State)
+    protected void OnAttack(State<EnemyState, StateEvent> state)
     {
-        transform.LookAt(Player.transform.position);
-        LastAttackTime = Time.time;
-        PlayerHealthController.TakeDamage(AttackDamage);
+        lastAttackTime = Time.time;
+        PlayerHealthController.TakeDamage(attackDamage);
         OnEnemyAttack?.Invoke();
     }
-
-    private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
-        {   
-            
-            
-        }
     }
 
     private void Update()

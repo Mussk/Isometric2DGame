@@ -1,22 +1,27 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Enemy;
 using UnityEngine;
 using UnityHFSM;
 
-public class AttackState : EnemyStateBase
+namespace Enemy.EnemyBehaviour.States
 {
-    public AttackState(bool needsExitTime,
-        BaseEnemyController Enemy,
-        Action<State<EnemyState, StateEvent>> onEnter,
-        float ExitTime = 0.33f) : 
-        base(needsExitTime, Enemy, ExitTime, onEnter) { }
-
-    public override void OnEnter()
+    public class AttackState : EnemyStateBase
     {
-        Agent.isStopped = true;
-        base.OnEnter();
-        Animator.Play("Attack");
+        public AttackState(bool needsExitTime,
+            BaseEnemyController enemy,
+            Action<State<EnemyState, StateEvent>> onEnter,
+            float exitTime = 1f) : 
+            base(needsExitTime, enemy, exitTime, onEnter) { }
+
+        public override void OnEnter()
+        {
+            
+            Agent.isStopped = true;
+            base.OnEnter();
+            Animator.Play("Attack");
+            
+            
+        }
+
+       
     }
 }

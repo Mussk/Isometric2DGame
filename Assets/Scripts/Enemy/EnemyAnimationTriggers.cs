@@ -1,59 +1,64 @@
 using UnityEngine;
 
-public class EnemyAnimationTriggers : MonoBehaviour
+namespace Enemy
 {
-    private static readonly int IsTakingHit = Animator.StringToHash("IsTakingHit");
-
-    [SerializeField]
-    private Animator animator;
-
-
-    public void ResetTakingHitAnimationTrigger()
+    public class EnemyAnimationTriggers : MonoBehaviour
     {
-        animator.SetBool(IsTakingHit, false);
-    }
+        
+        [SerializeField]
+        private Animator animator;
 
-    public void PlaySoundOnTakingDamage(string enemyType)
-    {
-        switch(enemyType) { 
-
-            case "skeleton":
-                //AudioManager.PlaySound(AudioManager.AudioLibrary.TribeSceneSounds.SkeletonHit);
-                break;
-            case "bat":
-               // AudioManager.PlaySound(AudioManager.AudioLibrary.TribeSceneSounds.BatHit);
-                break;
-
-        }
-    }
-
-    public void PlaySoundOnDealingDamage(string enemyType)
-    {
-        switch (enemyType)
+        //This method is triggered by animation
+        public void ResetTakingHitAnimationTrigger()
         {
-
-            case "skeleton":
-              //  AudioManager.PlaySound(AudioManager.AudioLibrary.TribeSceneSounds.SkeletonAttack);
-                break;
-            case "bat":
-             //   AudioManager.PlaySound(AudioManager.AudioLibrary.TribeSceneSounds.BatAttack);
-                break;
-
+            //animator.SetBool(IsTakingHit, false);
         }
-    }
-
-    public void PlaySoundOnDeath(string enemyType)
-    {
-        switch (enemyType)
+        
+        //This method is triggered by animation
+        public void PlaySoundOnTakingDamage(string enemyType)
         {
+            switch(enemyType) { 
 
-            case "skeleton":
-                //AudioManager.PlaySound(AudioManager.AudioLibrary.TribeSceneSounds.SkeletonDeath);
-                break;
-            case "bat":
-               // AudioManager.PlaySound(AudioManager.AudioLibrary.TribeSceneSounds.BatDeath);
-                break;
+                case "skeleton":
+                    //AudioManager.PlaySound(AudioManager.AudioLibrary.TribeSceneSounds.SkeletonHit);
+                    break;
+                case "bat":
+                    // AudioManager.PlaySound(AudioManager.AudioLibrary.TribeSceneSounds.BatHit);
+                    break;
 
+            }
+        }
+        
+        //This method is triggered by animation
+        public void PlaySoundOnDealingDamage(string enemyType)
+        {
+            switch (enemyType)
+            {
+
+                case "skeleton":
+                    //  AudioManager.PlaySound(AudioManager.AudioLibrary.TribeSceneSounds.SkeletonAttack);
+                    break;
+                case "bat":
+                    //   AudioManager.PlaySound(AudioManager.AudioLibrary.TribeSceneSounds.BatAttack);
+                    break;
+
+            }
+        }
+        
+        //This method is triggered by animation
+        public void PlaySoundOnDeath(string enemyType)
+        {
+            switch (enemyType)
+            {
+
+                case "skeleton":
+                    //AudioManager.PlaySound(AudioManager.AudioLibrary.TribeSceneSounds.SkeletonDeath);
+                    break;
+                case "bat":
+                    // AudioManager.PlaySound(AudioManager.AudioLibrary.TribeSceneSounds.BatDeath);
+                    break;
+
+            }
         }
     }
 }

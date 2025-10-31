@@ -37,16 +37,11 @@ public class BasePlayerController : MonoBehaviour
     
     protected Vector2 RawInput;
     
-    [SerializeField]
-    protected float shaderAnimDuration = 100f;
-
     protected virtual void Awake()
     {   
         CanMove = true;
         Rb = GetComponent<Rigidbody2D>();
         inputActions = new InputSystem_Actions();
-        //Effects.Effects.ResetFade();
-        
         Health = new Health(maxHealth, healthBar);
     }
 
@@ -133,10 +128,9 @@ public class BasePlayerController : MonoBehaviour
         try
         {
             Health.IsInvurable = true;
-           // Effects.Effects.SetBlinking(true);
             await UniTask.Delay((int)(invulnerabilityDuration * 1000));
             Health.IsInvurable = false;
-            //Effects.Effects.SetBlinking(false);
+            
         }
         catch (Exception e)
         {

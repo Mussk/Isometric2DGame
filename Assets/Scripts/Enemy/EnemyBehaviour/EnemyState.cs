@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public enum EnemyState
+namespace Enemy.EnemyBehaviour
 {
-    Idle,
-    Chase,
-    Attack,
-    Patrol
+    public enum EnemyState
+    {
+        Idle,
+        Chase,
+        Attack,
+        Patrol
+    }
 }

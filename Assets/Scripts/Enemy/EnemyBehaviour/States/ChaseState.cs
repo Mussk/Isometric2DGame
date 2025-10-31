@@ -1,43 +1,43 @@
-using System.Collections;
-using System.Collections.Generic;
-using Enemy;
 using UnityEngine;
 
-public class ChaseState : EnemyStateBase
+namespace Enemy.EnemyBehaviour.States
 {
-    private Transform Target;
-
-    public ChaseState(bool needsExitTime, BaseEnemyController Enemy, Transform Target) : base(needsExitTime, Enemy)
+    public class ChaseState : EnemyStateBase
     {
-        this.Target = Target;
-    }
+        private Transform _target;
 
-    public override void OnEnter()
-    {
-        base.OnEnter();
-        Agent.enabled = true;
-        Agent.isStopped = false;
-
-        Animator.Play("Run");
-    }
-
-    public override void OnLogic() 
-    {
-
-        base.OnLogic();
-        
-        if (!RequestedExit)
+        public ChaseState(bool needsExitTime, BaseEnemyController enemy, Transform target) : base(needsExitTime, enemy)
         {
-            
-            Agent.SetDestination(Target.position);
-
-            
+            this._target = target;
         }
-        else if (Agent.remainingDistance <= Agent.stoppingDistance) 
+
+        public override void OnEnter()
+        {
+            base.OnEnter();
+            Agent.enabled = true;
+            Agent.isStopped = false;
+
+            Animator.Play("Movement");
+        }
+
+        public override void OnLogic() 
         {
 
-            fsm.StateCanExit();
+            base.OnLogic();
+        
+            if (!RequestedExit)
+            {
+            
+                Agent.SetDestination(_target.position);
 
+            
+            }
+            else if (Agent.remainingDistance <= Agent.stoppingDistance) 
+            {
+
+                fsm.StateCanExit();
+
+            }
         }
     }
 }

@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public enum StateEvent
+namespace Enemy.EnemyBehaviour
 {
-    DetectPlayer,
-    LostPlayer
+    public enum StateEvent
+    {
+        DetectPlayer,
+        LostPlayer
  
+    }
 }
