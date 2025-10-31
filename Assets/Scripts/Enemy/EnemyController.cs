@@ -26,14 +26,14 @@ namespace Enemy
         private void OnEnable()
         {
             HealhSystem.OnDeath += TriggerDeath;
-            //HealhSystem.OnTakingDamage += PlayTakingDamageAnimation;
+            HealhSystem.OnTakingDamage += TriggerHitState;
         
         }
 
         private void OnDisable()
         {
             HealhSystem.OnDeath -= TriggerDeath;
-           // HealhSystem.OnTakingDamage -= PlayTakingDamageAnimation;
+            HealhSystem.OnTakingDamage -= TriggerHitState;
         }
         
        
@@ -58,8 +58,18 @@ namespace Enemy
             throw new NotImplementedException();
         }
 
-        
-        
+        private void TriggerHitState()
+        => IsGotHit = true;
+
+        //can trigger both trigger and non-trigger collider, used Layer exclusion on collider to fix.
+        private void OnTriggerEnter2D(Collider2D other)
+        {   
+            
+            if (other.CompareTag(playerAttackColliderTag))
+            {
+                HealhSystem.TakeDamage(Player.GetComponent<PlayerController>().DamageAmount);
+            }
+        }
 
         private void PlayDeathAnimation()
         {

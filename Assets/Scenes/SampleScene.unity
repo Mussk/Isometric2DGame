@@ -99419,7 +99419,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6026659724123872660}
   - component: {fileID: 4075442736294016754}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: AttackDownCollider
   m_TagString: AttackCollider
   m_Icon: {fileID: 0}
@@ -99848,7 +99848,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6544481464515184829}
   - component: {fileID: 2111368021676506606}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: AttackTopCollider
   m_TagString: AttackCollider
   m_Icon: {fileID: 0}
@@ -100024,7 +100024,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3159977414556538002}
   - component: {fileID: 568216714988806596}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: 'AttackLeftCollider '
   m_TagString: AttackCollider
   m_Icon: {fileID: 0}
@@ -100105,7 +100105,7 @@ MonoBehaviour:
   invulnerabilityDuration: 2
   healthBar: {fileID: 8992413736484965877}
   canMove: 0
-  damageAmount: 15
+  damageAmount: 7
   animator: {fileID: 2103527152494034887}
   spriteRenderer: {fileID: 4054121958145356692}
 --- !u!114 &8275745070306066601
@@ -100283,7 +100283,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8689146056141736777}
   - component: {fileID: 8378298418775756803}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: AttackRightCollider
   m_TagString: AttackCollider
   m_Icon: {fileID: 0}
