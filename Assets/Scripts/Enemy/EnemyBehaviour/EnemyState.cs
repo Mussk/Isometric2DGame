@@ -7,6 +7,7 @@ namespace Enemy.EnemyBehaviour
         Attack,
         Patrol,
         Hit,
-        Death
+        Death,
+        Spawn,
     }
 }

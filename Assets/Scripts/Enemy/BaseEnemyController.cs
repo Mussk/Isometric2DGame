@@ -36,6 +36,9 @@ namespace  Enemy
         [Header("Hit Config")] [SerializeField]
         protected float hitAnimExitTime = 0.33f;
         
+        [Header("Spawn Config")]
+        [SerializeField] protected float spawnAnimExitTime = 3f;
+        
         [Header("Death Config")]
         [SerializeField] protected float deathAnimExitTime = 3f;
 
@@ -51,6 +54,7 @@ namespace  Enemy
         [SerializeField] protected bool isInMeeleRange;
         public bool IsGotHit { get; set; }
         public bool IsDead { get; set; }
+        public bool IsSpawned { get; set; } = false;
 
 
         [SerializeField] protected bool isInChasingRange;
@@ -83,8 +87,10 @@ namespace  Enemy
             EnemyFsm.AddState(EnemyState.Patrol, new PatrolState(true, this, patrolSpeed, patrolMaxDistance));
             EnemyFsm.AddState(EnemyState.Hit, new HitState(true, this, hitAnimExitTime));
             EnemyFsm.AddState(EnemyState.Death, new DeathState(true, this, deathAnimExitTime));
+            EnemyFsm.AddState(EnemyState.Spawn, new SpawnState(true, this, spawnAnimExitTime));
+            
 
-            EnemyFsm.SetStartState(EnemyState.Idle);
+            EnemyFsm.SetStartState(EnemyState.Spawn);
 
             //Add Transitions
             EnemyFsm.AddTriggerTransition(StateEvent.DetectPlayer,
@@ -139,8 +145,8 @@ namespace  Enemy
             EnemyFsm.AddTransitionFromAny(new Transition<EnemyState>(EnemyState.Attack, EnemyState.Death, (_) => IsDead,
                 forceInstantly: true));
             
-            
-           
+            //Spawn transitions
+            EnemyFsm.AddTransition(new Transition<EnemyState>(EnemyState.Spawn, EnemyState.Idle, (_) => IsSpawned));
             
             EnemyFsm.Init();
         }

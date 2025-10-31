@@ -116,9 +116,11 @@ MonoBehaviour:
   attackDamage: 1
   attackAnimExitTime: 1
   hitAnimExitTime: 0.33
+  spawnAnimExitTime: 2
+  deathAnimExitTime: 3
   patrolSpeed: 3.5
   patrolMaxDistance: 20
-  maxIdleTime: 3
+  maxIdleTime: 2
   isInMeeleRange: 0
   isInChasingRange: 0
   lastAttackTime: 0
