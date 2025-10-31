@@ -16,7 +16,8 @@ public abstract class BaseEnemyController : MonoBehaviour
   
     protected GameObject Player;
     protected Health PlayerHealthController;
-    protected string PlayerTag;
+    [SerializeField]
+    protected string playerTag = "Player";
     
     [Header("Enemy Model Sprite Renderer")]
     [SerializeField]
@@ -71,7 +72,7 @@ public abstract class BaseEnemyController : MonoBehaviour
         Agent = GetComponent<NavMeshAgent>();
         Animator = GetComponentInChildren<Animator>();
         EnemyFsm = new StateMachine<EnemyState, StateEvent>();
-        Player = GameObject.FindWithTag(PlayerTag).gameObject;
+        Player = GameObject.FindWithTag(playerTag).gameObject;
        
         // Configure the agent for 2D
         Agent.updateUpAxis = false;

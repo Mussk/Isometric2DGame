@@ -10,6 +10,8 @@ public class BasePlayerController : MonoBehaviour
 {
     [SerializeField]
     protected float moveSpeed = 5f;
+    [SerializeField, Range(0f, 1f)]
+    private float instantAcceleration = 0.1f;
     
     [SerializeField]
     protected int maxHealth;
@@ -93,7 +95,7 @@ public class BasePlayerController : MonoBehaviour
     {
         if (CanMove)
         {
-            Rb.linearVelocity = Vector2.Lerp(Rb.linearVelocity, MoveInput * moveSpeed, 0.1f);
+            Rb.linearVelocity = Vector2.Lerp(Rb.linearVelocity, MoveInput * moveSpeed, instantAcceleration);
             transform.position = new Vector3(transform.position.x, transform.position.y, -transform.position.x);
         }
         else
