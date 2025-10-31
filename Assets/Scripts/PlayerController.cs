@@ -103,6 +103,7 @@ public class PlayerController : BasePlayerController
     }
 
 
+    
     protected void PlayOnTakingDamageAnimation() 
     {
         //AudioManager.PlaySound(AudioManager.AudioLibrary.TribeSceneSounds.PlayerHit);
@@ -110,5 +111,5 @@ public class PlayerController : BasePlayerController
     
     }
 
-    //Animation end trigger in PlayerAttackAnimationTrigger
+    
 }
