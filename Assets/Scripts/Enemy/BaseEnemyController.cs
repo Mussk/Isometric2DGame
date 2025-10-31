@@ -156,13 +156,19 @@ public abstract class BaseEnemyController : MonoBehaviour
         PlayerHealthController.TakeDamage(attackDamage);
         OnEnemyAttack?.Invoke();
     }
+    
+    protected virtual void Update()
     {
+        EnemyFsm.OnLogic();
+        
+        transform.rotation = Quaternion.identity;
+        
+        AdjustLookDirection(Agent.destination);
     }
 
-    private void Update()
+    private void AdjustLookDirection(Vector3 destination)
     {
-        EnemyFSM.OnLogic();
-       // Debug.Log(EnemyFSM.ActiveState);
+        spriteRenderer.flipX = !(destination.x > transform.position.x);
     }
 }
 }
