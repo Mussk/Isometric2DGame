@@ -5,16 +5,16 @@ using UnityEngine;
 public class PrefabSpawner : MonoBehaviour
 {
     [Header("Prefab to Spawn")] [SerializeField]
-    private GameObject prefab;
+    protected GameObject prefab;
 
     [Header("Spawn Settings")] [SerializeField]
-    private int initialPoolSize = 10;
+    protected int initialPoolSize = 10;
 
     [SerializeField] public Transform parent; // optional, for hierarchy organization
 
-    private ObjectPool _pool;
+    protected ObjectPool _pool;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         if (!prefab)
         {
@@ -26,13 +26,13 @@ public class PrefabSpawner : MonoBehaviour
         _pool = new ObjectPool(prefab, initialPoolSize, parent);
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         TriggerInitialSpawn();
     }
 
 
-    private void TriggerInitialSpawn()
+    protected virtual void TriggerInitialSpawn()
     {
         for (int i = 0; i < initialPoolSize; i++)
         {

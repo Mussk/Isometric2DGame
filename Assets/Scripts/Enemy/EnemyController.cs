@@ -6,29 +6,26 @@ namespace Enemy
 {
     public class EnemyController : BaseEnemyController
     {
-       
-        
-       // public static event Action OnEnemyDeath;
         
         protected override void Awake()
         {
             base.Awake();
-            HealhSystem = new Health(currentHealth, null);
+            HealthSystem = new Health(currentHealth, HealthBar);
 
             
         }
         
         private void OnEnable()
         {
-            HealhSystem.OnDeath += TriggerDeathState;
-            HealhSystem.OnTakingDamage += TriggerHitState;
+            HealthSystem.OnDeath += TriggerDeathState;
+            HealthSystem.OnTakingDamage += TriggerHitState;
             EnableColliders();
         }
 
         private void OnDisable()
         {
-            HealhSystem.OnDeath -= TriggerDeathState;
-            HealhSystem.OnTakingDamage -= TriggerHitState;
+            HealthSystem.OnDeath -= TriggerDeathState;
+            HealthSystem.OnTakingDamage -= TriggerHitState;
         }
         
        
@@ -48,7 +45,7 @@ namespace Enemy
             
             if (other.CompareTag(playerAttackColliderTag))
             {
-                HealhSystem.TakeDamage(Player.GetComponent<PlayerController>().DamageAmount);
+                HealthSystem.TakeDamage(Player.GetComponent<PlayerController>().DamageAmount);
             }
         }
         

@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class BasePlayerController : MonoBehaviour
+public class BasePlayerController : MonoBehaviour, IHasHealth
 {
     [SerializeField]
     protected float moveSpeed = 5f;
@@ -23,10 +23,12 @@ public class BasePlayerController : MonoBehaviour
     public InputSystem_Actions InputActions => inputActions;
     protected Vector2 MoveInput;
 
-    public Health Health { get; protected set; }
+    [SerializeField] private GameEnd gameEndObject;
 
+    public Health HealthSystem { get; set; }
+    public HealthBar HealthBar { get => healthBar; set => healthBar = value; }
     [SerializeField]
-    protected HealthBar healthBar;
+    private HealthBar healthBar;
 
     [SerializeField]
     protected bool canMove;
@@ -44,7 +46,7 @@ public class BasePlayerController : MonoBehaviour
         CanMove = true;
         Rb = GetComponent<Rigidbody2D>();
         inputActions = new InputSystem_Actions();
-        Health = new Health(maxHealth, healthBar);
+        HealthSystem = new Health(maxHealth, HealthBar);
     }
 
     protected virtual void OnEnable()
@@ -52,8 +54,8 @@ public class BasePlayerController : MonoBehaviour
         inputActions.Player.Enable();
         inputActions.Player.Move.performed += OnMovePerformed;
         inputActions.Player.Move.canceled += OnMoveCanceled;
-        Health.OnTakingDamage += EnterInvulState;
-        //Health.OnDeath += Die;
+        HealthSystem.OnTakingDamage += EnterInvulState;
+        HealthSystem.OnDeath += Die;
         
     }
 
@@ -62,8 +64,8 @@ public class BasePlayerController : MonoBehaviour
         inputActions.Player.Disable();
         inputActions.Player.Move.performed -= OnMovePerformed;
         inputActions.Player.Move.canceled -= OnMoveCanceled;
-        Health.OnTakingDamage -= EnterInvulState;
-        //Health.OnDeath -= Die;
+        HealthSystem.OnTakingDamage -= EnterInvulState;
+        HealthSystem.OnDeath -= Die;
     }
 
     protected virtual void OnMovePerformed(InputAction.CallbackContext context)
@@ -106,32 +108,30 @@ public class BasePlayerController : MonoBehaviour
     }
 
     
-  /*  protected virtual async void Die()
+    protected virtual void Die()
     {
         try
         {
-            //AudioManager.PlaySound(AudioManager.AudioLibrary.MiscSounds.LooseGameSound);
-            inputActions.Player.Move.Disable();
+            inputActions.Player.Disable();
             DisablePlayerColliders();
             Debug.Log("Player died!");
             CanMove = false;
             isDead = true;
-           // await Effects.Effects.PlayDissolve(shaderAnimDuration);
-           // GameEnd.TriggerOnGameEnd();
+            gameEndObject.ShowOnGameEndSceen();
         }
         catch (Exception e)
         {
             Debug.Log(e.Message);
         }
-    }*/
+    }
 
     protected async void EnterInvulState()
     {
         try
         {
-            Health.IsInvurable = true;
+            HealthSystem.IsInvurable = true;
             await UniTask.Delay((int)(invulnerabilityDuration * 1000));
-            Health.IsInvurable = false;
+            HealthSystem.IsInvurable = false;
             
         }
         catch (Exception e)
@@ -149,4 +149,6 @@ public class BasePlayerController : MonoBehaviour
             collider1.enabled = false;
         }
     }
+
+    
 }

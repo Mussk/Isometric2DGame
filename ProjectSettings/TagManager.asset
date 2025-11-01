@@ -7,6 +7,10 @@ TagManager:
   - AttackCollider
   - HealthBar
   - Spawner
+  - Enemy
+  - ProjectileSpawner
+  - Obstacle
+  - PlayerProjectile
   layers:
   - Default
   - TransparentFX
@@ -18,8 +22,8 @@ TagManager:
   - Obstacles
   - PlayerWeapon
   - AI
-  - 
-  - 
+  - Player
+  - Pickable
   - 
   - 
   - 

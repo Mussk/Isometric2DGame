@@ -12,7 +12,7 @@ using Enemy.Sensor;
 namespace  Enemy
 {
     [RequireComponent(typeof(NavMeshAgent))]
-    public abstract class BaseEnemyController : MonoBehaviour, IPoolable
+    public abstract class BaseEnemyController : MonoBehaviour, IPoolable, IHasHealth
     {
 
         protected GameObject Player;
@@ -23,9 +23,12 @@ namespace  Enemy
         [Header("Health")]
         [SerializeField]
         protected int currentHealth;
-        protected Health HealhSystem { get; set; }
-
+        public Health HealthSystem { get; set; }
         
+        public HealthBar HealthBar { get => healthBar; set => healthBar = value; }
+        [SerializeField]
+        private HealthBar healthBar;
+
         [Header("Enemy Model Sprite Renderer")] [SerializeField]
         protected SpriteRenderer spriteRenderer;
 
@@ -68,7 +71,7 @@ namespace  Enemy
         public bool IsGotHit { get; set; }
         public bool IsDead { get; set; }
         public bool IsSpawned { get; set; } = false;
-      //  public bool IsReadyToSpawn { get; set; } = false;
+     
 
 
         [SerializeField] protected bool isInChasingRange;
@@ -159,8 +162,7 @@ namespace  Enemy
             //From parameter can be anything
             EnemyFsm.AddTransitionFromAny(new Transition<EnemyState>(EnemyState.Attack, EnemyState.Death, (_) => IsDead,
                 forceInstantly: true));
-         //   EnemyFsm.AddTransitionFromAny(new Transition<EnemyState>(EnemyState.Death, EnemyState.Spawn, (_) => IsReadyToSpawn,
-              //  forceInstantly: true));
+        
             
             //Spawn transitions
             EnemyFsm.AddTransition(new Transition<EnemyState>(EnemyState.Spawn, EnemyState.Idle, (_) => IsSpawned));
@@ -176,7 +178,7 @@ namespace  Enemy
             meleePlayerSensor.OnPlayerEnter += MeleePlayerSensor_OnPlayerEnter;
             meleePlayerSensor.OnPlayerExit += MeleePlayerSensor_OnPlayerExit;
 
-            PlayerHealthController = Player.GetComponent<PlayerController>().Health;
+            PlayerHealthController = Player.GetComponent<PlayerController>().HealthSystem;
 
         }
 
@@ -237,7 +239,7 @@ namespace  Enemy
             IsDead = false;
             IsSpawned = false;
             IsGotHit = false;
-            HealhSystem.CurrentHealth = HealhSystem.MaxHealth;
+            HealthSystem.CurrentHealth = HealthSystem.MaxHealth;
             transform.position = Utility.GetRandomNavMeshPosition(Vector3.zero, maxSpawnRange);
             transform.rotation = Quaternion.identity;
             EnemyFsm.RequestStateChange(EnemyState.Spawn, forceInstantly: true);
@@ -248,5 +250,7 @@ namespace  Enemy
             Debug.Log(e.Message);
         }
     }
+
+    
     }
 }
