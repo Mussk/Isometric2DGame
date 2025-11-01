@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
@@ -8,11 +9,17 @@ public class HealthBar : MonoBehaviour
     public Image healthFill;
 
     [SerializeField]
-    private PlayerController playerController;
-
+    private Component characterController;
+    private IHasHealth _healthCharacterController;
+    
     private void Start()
     {
-       SetMaxHealth(playerController.Health.MaxHealth);
+        if (characterController is IHasHealth)
+        {
+          _healthCharacterController = (IHasHealth)characterController;   
+        }
+        
+       SetMaxHealth(_healthCharacterController.HealthSystem.MaxHealth);
     }
 
 

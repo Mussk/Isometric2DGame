@@ -5,6 +5,9 @@ namespace Enemy.EnemyBehaviour
         Idle,
         Chase,
         Attack,
-        Patrol
+        Patrol,
+        Hit,
+        Death,
+        Spawn,
     }
 }

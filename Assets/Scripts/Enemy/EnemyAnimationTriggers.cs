@@ -4,14 +4,13 @@ namespace Enemy
 {
     public class EnemyAnimationTriggers : MonoBehaviour
     {
-        
         [SerializeField]
         private Animator animator;
 
         //This method is triggered by animation
         public void ResetTakingHitAnimationTrigger()
         {
-            //animator.SetBool(IsTakingHit, false);
+           // isGotHit = false;
         }
         
         //This method is triggered by animation
