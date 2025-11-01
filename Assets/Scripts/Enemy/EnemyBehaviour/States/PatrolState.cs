@@ -28,7 +28,7 @@ namespace Enemy.EnemyBehaviour.States
             Agent.speed = _patrolSpeed;
             Agent.enabled = true;
             Agent.isStopped = false;
-            _patrolDestination = GetRandomNavMeshPosition(Enemy.gameObject.transform.position, _patrolMaxDistance);
+            _patrolDestination = Utility.GetRandomNavMeshPosition(Enemy.gameObject.transform.position, _patrolMaxDistance);
             base.OnEnter();
             Animator.Play("Movement");
 
@@ -61,10 +61,6 @@ namespace Enemy.EnemyBehaviour.States
             Agent.speed = _cachedAgentSpeed;
         }
 
-        private Vector3 GetRandomNavMeshPosition(Vector3 center, float maxDistance)
-        {
-            Vector3 randomPoint = center + Random.insideUnitSphere * maxDistance;
-            return NavMesh.SamplePosition(randomPoint, out var hit, maxDistance, NavMesh.AllAreas) ? hit.position : Vector3.zero;
-        }
+       
     }
 }

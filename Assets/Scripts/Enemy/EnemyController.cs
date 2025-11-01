@@ -7,12 +7,7 @@ namespace Enemy
     public class EnemyController : BaseEnemyController
     {
        
-        [Header("Health")]
-        [SerializeField]
-        private int currentHealth;
-
-        private Health HealhSystem { get; set; }
-
+        
        // public static event Action OnEnemyDeath;
         
         protected override void Awake()
@@ -27,7 +22,7 @@ namespace Enemy
         {
             HealhSystem.OnDeath += TriggerDeathState;
             HealhSystem.OnTakingDamage += TriggerHitState;
-        
+            EnableColliders();
         }
 
         private void OnDisable()
@@ -41,7 +36,7 @@ namespace Enemy
         {
                 IsDead = true;
                 DisableColliders();
-                //add to poll
+                
         }
 
         private void TriggerHitState()
@@ -64,6 +59,16 @@ namespace Enemy
             foreach (Collider2D collider1 in colliders) 
             { 
                 collider1.enabled = false; 
+            }
+        }
+
+        private void EnableColliders()
+        {
+            Collider2D[] colliders = gameObject.GetComponents<Collider2D>();
+
+            foreach (Collider2D collider1 in colliders) 
+            { 
+                collider1.enabled = true; 
             }
         }
     }

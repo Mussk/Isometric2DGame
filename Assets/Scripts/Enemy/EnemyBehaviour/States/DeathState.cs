@@ -33,13 +33,9 @@ namespace Enemy.EnemyBehaviour.States
             if (timer.Elapsed >= exitTime)
             {
                 OnExit();
+                BaseEnemyController.Spawner.DespawnAndRespawn(BaseEnemyController.gameObject);
             }
         }
         
-        public override void OnExit()
-        {
-            base.OnExit();
-            BaseEnemyController.gameObject.SetActive(false);
-        }
     }
 }

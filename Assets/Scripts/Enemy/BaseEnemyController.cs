@@ -1,4 +1,5 @@
 
+using System;
 using UnityEngine;
 using UnityHFSM;
 using UnityEngine.AI;
@@ -11,7 +12,7 @@ using Enemy.Sensor;
 namespace  Enemy
 {
     [RequireComponent(typeof(NavMeshAgent))]
-    public abstract class BaseEnemyController : MonoBehaviour
+    public abstract class BaseEnemyController : MonoBehaviour, IPoolable
     {
 
         protected GameObject Player;
@@ -19,6 +20,12 @@ namespace  Enemy
         [SerializeField] protected string playerAttackColliderTag = "AttackCollider";
         [SerializeField] protected string playerTag = "Player";
 
+        [Header("Health")]
+        [SerializeField]
+        protected int currentHealth;
+        protected Health HealhSystem { get; set; }
+
+        
         [Header("Enemy Model Sprite Renderer")] [SerializeField]
         protected SpriteRenderer spriteRenderer;
 
@@ -37,7 +44,13 @@ namespace  Enemy
         protected float hitAnimExitTime = 0.33f;
         
         [Header("Spawn Config")]
-        [SerializeField] protected float spawnAnimExitTime = 3f;
+        [SerializeField] 
+        protected float spawnAnimExitTime = 3f;
+        public PrefabSpawner Spawner { get; set; }
+        [SerializeField]
+        private string spawnerTag = "Spawner";
+
+        [SerializeField] private float maxSpawnRange = 100f;
         
         [Header("Death Config")]
         [SerializeField] protected float deathAnimExitTime = 3f;
@@ -55,6 +68,7 @@ namespace  Enemy
         public bool IsGotHit { get; set; }
         public bool IsDead { get; set; }
         public bool IsSpawned { get; set; } = false;
+      //  public bool IsReadyToSpawn { get; set; } = false;
 
 
         [SerializeField] protected bool isInChasingRange;
@@ -72,10 +86,11 @@ namespace  Enemy
         protected virtual void Awake()
         {
             Agent = GetComponent<NavMeshAgent>();
+            Agent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
             Animator = GetComponentInChildren<Animator>();
             EnemyFsm = new StateMachine<EnemyState, StateEvent>();
             Player = GameObject.FindWithTag(playerTag).gameObject;
-
+            Spawner = GameObject.FindWithTag(spawnerTag).gameObject.GetComponent<PrefabSpawner>();
             // Configure the agent for 2D
             Agent.updateUpAxis = false;
             Agent.updateRotation = false;
@@ -144,6 +159,8 @@ namespace  Enemy
             //From parameter can be anything
             EnemyFsm.AddTransitionFromAny(new Transition<EnemyState>(EnemyState.Attack, EnemyState.Death, (_) => IsDead,
                 forceInstantly: true));
+         //   EnemyFsm.AddTransitionFromAny(new Transition<EnemyState>(EnemyState.Death, EnemyState.Spawn, (_) => IsReadyToSpawn,
+              //  forceInstantly: true));
             
             //Spawn transitions
             EnemyFsm.AddTransition(new Transition<EnemyState>(EnemyState.Spawn, EnemyState.Idle, (_) => IsSpawned));
@@ -212,5 +229,24 @@ namespace  Enemy
         }
         
     }
-}
+    
+    public void OnReuse()
+    {
+        try
+        {   
+            IsDead = false;
+            IsSpawned = false;
+            IsGotHit = false;
+            HealhSystem.CurrentHealth = HealhSystem.MaxHealth;
+            transform.position = Utility.GetRandomNavMeshPosition(Vector3.zero, maxSpawnRange);
+            transform.rotation = Quaternion.identity;
+            EnemyFsm.RequestStateChange(EnemyState.Spawn, forceInstantly: true);
+            
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
+    }
+    }
 }

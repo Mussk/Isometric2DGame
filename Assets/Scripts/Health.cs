@@ -5,7 +5,7 @@ using UnityEngine;
 public class Health
 {
     public int MaxHealth { get; private set; }
-    private int CurrentHealth { get; set; }
+    public int CurrentHealth { get; set; }
 
     private readonly HealthBar _healthBar;
 
